@@ -2,6 +2,7 @@ import {
   Anchor,
   Button,
   H1,
+  H2,
   Paragraph,
   Separator,
   Sheet,
@@ -9,7 +10,7 @@ import {
   SwitchThemeButton,
   useToastController,
   XStack,
-  YStack
+  YStack,
 } from '@my/ui'
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { useState } from 'react'
@@ -23,7 +24,7 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
   })
 
   return (
-    <YStack flex={1} justify="center" items="center" gap="$8" p="$4" bg="$background">      
+    <YStack flex={1} justify="center" items="center" gap="$8" p="$4" bg="$background">
       <XStack
         position="absolute"
         width="100%"
@@ -58,11 +59,16 @@ export function HomeScreen({ pagesMode = false }: { pagesMode?: boolean }) {
       <Button {...linkProps}>Link to user</Button>
 
       <SheetDemo />
+      <SheetDemo disableDrag />
     </YStack>
   )
 }
 
-function SheetDemo() {
+interface SheetDemoProps {
+  disableDrag?: boolean
+}
+
+function SheetDemo({ disableDrag = false }: SheetDemoProps) {
   const toast = useToastController()
 
   const [open, setOpen] = useState(false)
@@ -70,12 +76,9 @@ function SheetDemo() {
 
   return (
     <>
-      <Button
-        size="$6"
-        icon={open ? ChevronDown : ChevronUp}
-        circular
-        onPress={() => setOpen((x) => !x)}
-      />
+      <Button size="$6" icon={open ? ChevronDown : ChevronUp} onPress={() => setOpen((x) => !x)}>
+        {disableDrag ? 'Drag disabled' : 'Drag enabled'}
+      </Button>
       <Sheet
         modal
         animation="medium"
@@ -85,6 +88,7 @@ function SheetDemo() {
         position={position}
         onPositionChange={setPosition}
         dismissOnSnapToBottom
+        disableDrag={disableDrag}
       >
         <Sheet.Overlay
           bg="$shadow4"
@@ -94,6 +98,16 @@ function SheetDemo() {
         />
         <Sheet.Handle bg="$color8" />
         <Sheet.Frame items="center" justify="center" gap="$10" bg="$color2">
+          <H2>Drag {disableDrag ? 'disabled' : 'enabled'}</H2>
+          {disableDrag ? (
+            <Paragraph text="center">
+              Buttons or links are clickable on physical android device
+            </Paragraph>
+          ) : (
+            <Paragraph text="center">
+              Good luck pressing buttons and links on physical android device
+            </Paragraph>
+          )}
           <XStack gap="$2">
             <Paragraph text="center">Made by</Paragraph>
             <Anchor color="$blue10" href="https://twitter.com/natebirdman" target="_blank">
